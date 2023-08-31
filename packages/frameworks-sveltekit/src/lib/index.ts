@@ -207,7 +207,8 @@ import { dev } from "$app/environment"
 import { env } from "$env/dynamic/private"
 
 import { Auth } from "@auth/core"
-import type { AuthAction, AuthConfig, Session } from "@auth/core/types"
+import type { AuthAction, AuthConfig } from "@auth/core/types"
+import type * as authTypes from "@auth/core/types"
 
 export async function getSession(
   req: Request,
@@ -293,10 +294,11 @@ declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace App {
     interface Locals {
-      getSession(): Promise<Session | null>
+      // Import Session from the authTypes object to avoid App namespace collisions with other packages (e.g. Houdini)
+      getSession(): Promise<authTypes.Session | null>
     }
     interface PageData {
-      session: Session | null
+      session: authTypes.Session | null
     }
   }
 }
